@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "baseUrl": "https://api.wbthekid.my.id",
+  "endpoints": [
+    {
+      "slug": "crypto-price",
+      "name": "Crypto Price",
+      "category": "crypto",
+      "method": "GET",
+      "path": "/api/v1/crypto/prices?symbol=BTCUSDT"
+    },
+    {
+      "slug": "ethereum-price",
+      "name": "Ethereum Price",
+      "category": "crypto",
+      "method": "GET",
+      "path": "/api/v1/generated/ethereum-price"
+    },
+    {
+      "slug": "multi-crypto",
+      "name": "Multi Crypto",
+      "category": "crypto",
+      "method": "GET",
+      "path": "/api/v1/markets/quotes?market=crypto&symbols=BTCUSDT,ETHUSDT,SOLUSDT"
+    },
+    {
+      "slug": "solana-live",
+      "name": "Solana Live",
+      "category": "crypto",
+      "method": "GET",
+      "path": "/api/v1/generated/solana-live"
+    },
+    {
+      "slug": "metals",
+      "name": "Metals",
+      "category": "metals",
+      "method": "GET",
+      "path": "/api/v1/markets/metals"
+    },
+    {
+      "slug": "fakedata",
+      "name": "Fakedata",
+      "category": "tools",
+      "method": "GET",
+      "path": "/api/v1/generated/fakedata"
+    }
+  ]
+}

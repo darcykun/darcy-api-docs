@@ -1,0 +1,160 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "WB THE KID Public API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.wbthekid.my.id"
+    }
+  ],
+  "paths": {
+    "/api/v1/crypto/prices": {
+      "get": {
+        "tags": [
+          "crypto"
+        ],
+        "summary": "Crypto Price",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "4XX": {
+            "description": "Client error"
+          },
+          "5XX": {
+            "description": "Upstream/server error"
+          }
+        }
+      }
+    },
+    "/api/v1/generated/ethereum-price": {
+      "get": {
+        "tags": [
+          "crypto"
+        ],
+        "summary": "Ethereum Price",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "4XX": {
+            "description": "Client error"
+          },
+          "5XX": {
+            "description": "Upstream/server error"
+          }
+        }
+      }
+    },
+    "/api/v1/markets/quotes": {
+      "get": {
+        "tags": [
+          "crypto"
+        ],
+        "summary": "Multi Crypto",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "market",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "symbols",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "4XX": {
+            "description": "Client error"
+          },
+          "5XX": {
+            "description": "Upstream/server error"
+          }
+        }
+      }
+    },
+    "/api/v1/generated/solana-live": {
+      "get": {
+        "tags": [
+          "crypto"
+        ],
+        "summary": "Solana Live",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "4XX": {
+            "description": "Client error"
+          },
+          "5XX": {
+            "description": "Upstream/server error"
+          }
+        }
+      }
+    },
+    "/api/v1/markets/metals": {
+      "get": {
+        "tags": [
+          "metals"
+        ],
+        "summary": "Metals",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "4XX": {
+            "description": "Client error"
+          },
+          "5XX": {
+            "description": "Upstream/server error"
+          }
+        }
+      }
+    },
+    "/api/v1/generated/fakedata": {
+      "get": {
+        "tags": [
+          "tools"
+        ],
+        "summary": "Fakedata",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "4XX": {
+            "description": "Client error"
+          },
+          "5XX": {
+            "description": "Upstream/server error"
+          }
+        }
+      }
+    }
+  }
+}

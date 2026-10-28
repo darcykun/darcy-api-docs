@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0e1016" />
+  <title>WB THE KID | API Documentation</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0e1016;--panel:#181b24;--panel2:#202431;--stroke:#313747;--fg:#f5f7fb;--muted:#a6afc2;--accent:#87dcb3}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top left,#192d34 0,transparent 42%),var(--bg);color:var(--fg);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+    main{max-width:1120px;margin:auto;padding:42px 22px 100px}nav{display:flex;align-items:center;justify-content:space-between;gap:12px}nav .brand{font-weight:800;letter-spacing:.07em;font-size:14px}a{color:var(--accent)}a:hover{text-decoration:none}
+    h1{font-size:clamp(34px,6vw,64px);line-height:1.07;letter-spacing:-.045em;margin:64px 0 15px}h2{font-size:23px;margin:40px 0 15px}p{color:var(--muted);max-width:640px}
+    .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}.lead{font-size:17px;margin-bottom:24px}
+    .links{display:flex;gap:10px;flex-wrap:wrap;margin:22px 0 35px}.pill{border:1px solid var(--stroke);padding:8px 13px;border-radius:999px;text-decoration:none;font-size:13px}
+    .search{padding:15px 18px;background:var(--panel);border:1px solid var(--stroke);border-radius:14px;width:100%;color:var(--fg);font:inherit;outline:none}.search:focus{border-color:var(--accent)}
+    .filters{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 20px}.filter{background:var(--panel);border:1px solid var(--stroke);color:var(--fg);border-radius:999px;padding:7px 14px;cursor:pointer}.filter[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#082119}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}.card{padding:18px;background:var(--panel);border:1px solid var(--stroke);border-radius:18px;min-width:0}.card h3{margin:12px 0 8px}.tag{display:inline-block;font-size:11px;font-weight:750;letter-spacing:.06em;color:var(--accent);background:#1e4438;border-radius:5px;padding:3px 7px}
+    code{color:#d7e9f6;overflow-wrap:anywhere;font-size:12px}.path{display:block;padding:10px 12px;background:var(--panel2);border-radius:9px;margin:12px 0}.action{display:inline-block;font-size:13px;text-decoration:none;border:1px solid var(--stroke);border-radius:9px;padding:7px 12px;margin-top:5px}
+    footer{border-top:1px solid var(--stroke);padding:25px 0;margin-top:55px;color:var(--muted);font-size:13px}.empty{padding:30px;border:1px dashed var(--stroke);border-radius:14px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <main>
+    <nav><span class="brand">WB THE KID / API</span><a href="./openapi.json">OpenAPI Spec</a></nav>
+    <div class="eyebrow" style="margin-top:62px">Public developer documentation</div>
+    <h1>One API catalog.<br/>All your endpoints.</h1>
+    <p class="lead">Browse categorized API endpoints for crypto, tools, metals, and more. Backend implementation and provider credentials remain private.</p>
+    <div class="links"><a class="pill" href="./catalog.json">JSON Catalog</a><a class="pill" href="./openapi.json">OpenAPI 3.1</a><a class="pill" href="https://api.wbthekid.my.id">API Base URL</a></div>
+    <label for="search" class="eyebrow">Explore endpoints</label>
+    <input id="search" class="search" placeholder="Search endpoint, path or category..." autocomplete="off" />
+    <div id="filters" class="filters" role="group" aria-label="Filter category"></div>
+    <div id="results" class="grid" aria-live="polite"><p>Loading API catalog...</p></div>
+    <footer>WB THE KID API Documentation · Automatically synchronized from a private backend repository. API usage may be rate limited.</footer>
+  </main>
+  <script>
+  (() => {
+    const results = document.getElementById('results');
+    const filters = document.getElementById('filters');
+    const search = document.getElementById('search');
+    let category = 'all', rows = [];
+    const label = (name) => name.slice(0,1).toUpperCase() + name.slice(1);
+    const create = (tag, className, value) => { const e = document.createElement(tag); if(className)e.className=className; if(value!==undefined)e.textContent=value; return e; };
+    function draw(){
+      const query = search.value.trim().toLowerCase();
+      results.replaceChildren();
+      const items=rows.filter(x=>(category==='all'||x.category===category)&&(`${x.name} ${x.path} ${x.category}`).toLowerCase().includes(query));
+      if(!items.length){results.append(create('div','empty','No matching API endpoints.'));return;}
+      for(const e of items){
+        const card=create('article','card'); card.append(create('span','tag',`${e.method} · ${label(e.category)}`),create('h3','',e.name));
+        card.append(create('code','path',e.path));
+        const link=create('a','action','Open endpoint'); link.href=`https://api.wbthekid.my.id${e.path}`; link.target='_blank';link.rel='noopener noreferrer';card.append(link);
+        results.append(card);
+      }
+    }
+    function drawFilters(){
+      filters.replaceChildren();
+      const options=['all',...new Set(rows.map(x=>x.category))];
+      for(const c of options){const button=create('button','filter',c==='all'?'All APIs':label(c));button.type='button';button.setAttribute('aria-pressed',String(c===category));button.addEventListener('click',()=>{category=c;drawFilters();draw();});filters.append(button);}
+    }
+    fetch('./catalog.json',{cache:'no-store'}).then(async r=>{if(!r.ok)throw new Error(`HTTP ${r.status}`);return r.json();}).then(j=>{rows=Array.isArray(j.endpoints)?j.endpoints:[];drawFilters();draw();}).catch(()=>{results.replaceChildren(create('div','empty','Catalog unavailable. Please retry later.'));});
+    search.addEventListener('input',draw);
+  })();
+  </script>
+</body></html>
